@@ -1,0 +1,46 @@
+// 主色
+$mc: #fa464c;
+// 反色
+$otc: #fff;
+// 字体颜色
+$txc: #333;
+// 浅色背景
+$bgc: #e4e8f1;
+// 顶部高度
+$th: 0.8rem;
+// 设置字体
+@mixin ft($s: 14px, $c: $txc, $b: normal) {
+    color: $c;
+    font-size: $s;
+    font-weight: $b;
+}
+
+
+/**
+ * 多行文本溢出省略号
+ * @param  {[type]} $linenum:0 [description]
+ * @return {[type]}              [description]
+ */
+
+@mixin multiline-ellipsis($lineclamp: 1) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    display: box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: $lineclamp;
+}
+
+
+/**
+ * 单行文本溢出省略号
+ * @param  {[type]} $substract:0 `$substract`单位为%
+ * @return {[type]}              [description]
+ */
+
+.singleline-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+}
