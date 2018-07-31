@@ -9,7 +9,7 @@ export function createRouter() {
 		routes: [
 			{
 				path: '/',
-				component: () => import('../pages/index.vue'),
+				component: () => import(/* webpackChunkName: "index" */ '../pages/index'),
 				name: 'index',
 				meta: {
 					title: 'Vue服务端渲染首页'
@@ -17,7 +17,7 @@ export function createRouter() {
 			},
 			{
 				path: '/detail/:type/:id',
-				component: () => import('../pages/detail.vue'),
+				component: () => import(/* webpackChunkName: "detail" */ '../pages/detail'),
 				name: 'detail',
 				meta: {
 					title: '详情页'

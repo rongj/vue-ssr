@@ -1,8 +1,8 @@
 {
   "publicPath": "/",
   "all": [
-    "0.js",
-    "1.js",
+    "detail.js",
+    "index.js",
     "vendor.js",
     "app.js",
     "manifest.js",
@@ -14,8 +14,8 @@
     "app.js"
   ],
   "async": [
-    "0.js",
-    "1.js"
+    "detail.js",
+    "index.js"
   ],
   "modules": {
     "586999d8": [
