@@ -48,16 +48,6 @@
             line-height: 0.32rem;
             height: 0.32rem;
         }
-        .gender {
-            width: 0.32rem;
-            height: 0.32rem;
-            &.man {
-                background: url(../assets/images/male.png) no-repeat 50% 50% / auto 100%;
-            }
-            &.woman {
-                background: url(../assets/images/female.png) no-repeat 50% 50% / auto 100%;
-            }
-        }
     }
     .post-time {
         color: #888;

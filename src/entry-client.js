@@ -6,21 +6,48 @@ import { createApp } from './main'
 
 const { app, router, store } = createApp()
 
+const getTitle = vm => {
+	// 优先取组件中动态设置的title, 然后查找路由中meta
+	const title = vm.$options.title || vm.$route.meta.title || 'Vue服务端渲染demo'
+	if (title) {
+		return typeof title === 'function'
+			? title.call(vm)
+			: title
+	}
+}
+
 // 匹配要渲染的视图后，再获取数据
+// 当路由导航被触发时，可以立即切换视图，应用程序具有更快的响应速度
 Vue.mixin({
-    beforeMount() {
-        const { asyncData } = this.$options
-        if (asyncData) {
-            // 将获取数据操作分配给 promise
-            // 以便在组件中，我们可以在数据准备就绪后
-            // 通过运行 `this.dataPromise.then(...)` 来执行其他任务
-            this.dataPromise = asyncData({
-                store: this.$store,
-                route: this.$route
-            })
-        }
-    },
- //    beforeRouteUpdate (to, from, next) {
+	beforeMount() {
+		const { asyncData } = this.$options
+		if (asyncData) {
+			// 将获取数据操作分配给 promise
+			// 以便在组件中，我们可以在数据准备就绪后
+			// 通过运行 `this.dataPromise.then(...)` 来执行其他任务
+			this.dataPromise = asyncData({
+				store: this.$store,
+				route: this.$route
+			})
+		}
+	},
+
+	created() {
+		// 服务端设置title
+		if(process.env.VUE_ENV === 'server') {
+			this.$ssrContext.title = getTitle(this);
+		}
+	},
+
+	mounted() {
+		// 客户端设置title
+		if(process.env.VUE_ENV !== 'server') {
+			document.title = getTitle(this);
+		}
+	},
+
+	// 当路由组件重用 也应该调用 asyncData 函数
+	// beforeRouteUpdate (to, from, next) {
 	// const { asyncData } = this.$options
 	// 	if (asyncData) {
 	// 		asyncData({
@@ -48,15 +75,18 @@ router.onReady(() => {
 	router.beforeResolve((to, from, next) => {
 		const matched = router.getMatchedComponents(to)
 		const prevMatched = router.getMatchedComponents(from)
+
 		// 我们只关心之前没有渲染的组件
 		// 所以我们对比它们，找出两个匹配列表的差异组件
 		let diffed = false
 		const activated = matched.filter((c, i) => {
 			return diffed || (diffed = (prevMatched[i] !== c))
 		})
+
 		if (!activated.length) {
 			return next()
 		}
+
 		// 这里如果有加载指示器(loading indicator)，就触发
 		Promise.all(activated.map(c => {
 			if (c.asyncData) {
@@ -68,8 +98,8 @@ router.onReady(() => {
 		}).catch(next)
 	})
 
-	app.$mount('#app');
-});
+	app.$mount('#app')
+})
 
 // service worker
 // if ('https:' === location.protocol && navigator.serviceWorker) {

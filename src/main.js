@@ -1,31 +1,27 @@
 import Vue from 'vue'
 
 import App from './App.vue'
-import router from './router/index'
-import store from './store/index'
+import { createRouter } from './router/index'
+import { createStore } from './store/index'
 import { sync } from 'vuex-router-sync'
 
-// import './assets/scss/reset.scss'
-
-import * as filters from './utils/filters'
-let filterObj = filters;
-Object.keys(filterObj).forEach(key => {
-    Vue.filter(key, filterObj[key])
-})
-
-// const app = new Vue({
-//     el: '#app',
-//     router,
-//     render: h => h(App)
-// })
 
 export function createApp () {
+	// 创建 router 和 store 实例
+	const store = createStore()
+	const router = createRouter()
+
+	// 同步路由状态(route state)到 store
 	sync(store, router)
+
+	// 创建应用程序实例，将 router 和 store 注入
     const app = new Vue({
         el: '#app',
         router,
         store,
         render: h => h(App)
     })
+
+    // 暴露 app, router 和 store。
     return { app, router, store }
 }
